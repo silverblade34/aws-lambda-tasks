@@ -18,7 +18,7 @@ provider:
 
 functions:
   addTask:
-    handler: src/addTask.addTask
+    handler: src/addTask.handler
     events:
       - httpApi:
           path: /tasks

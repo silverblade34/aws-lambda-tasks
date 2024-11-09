@@ -1,6 +1,6 @@
-const AWS = require("aws-sdk");
+import AWS from "aws-sdk";
 
-const findTask = async (event) => {
+export const findTask = async (event) => {
     try {
         const dynamodb = new AWS.DynamoDB.DocumentClient();
         const { id } = event.pathParameters;
@@ -19,4 +19,3 @@ const findTask = async (event) => {
     }
 };
 
-module.exports = { findTask };

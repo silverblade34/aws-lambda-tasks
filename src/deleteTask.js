@@ -1,6 +1,6 @@
-const AWS = require("aws-sdk")
+import AWS from "aws-sdk";
 
-const deleteTask = async (event) => {
+export const deleteTask = async (event) => {
     try {
         const dynamodb = new AWS.DynamoDB.DocumentClient();
         const { id } = event.pathParameters;
@@ -15,8 +15,4 @@ const deleteTask = async (event) => {
             body: JSON.stringify({ message: error.message }),
         };
     }
-}
-
-module.exports = {
-    deleteTask
 }

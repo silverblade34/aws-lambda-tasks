@@ -1,12 +1,14 @@
-const { v4 } = require("uuid")
-const AWS = require("aws-sdk")
+import { v4 as uuidv4 } from "uuid";
+import AWS from "aws-sdk";
+import middy from "@middy/core";
+import jsonBodyParser from '@middy/http-json-body-parser'
 
 const addTask = async (event) => {
     try {
         const dynamodb = new AWS.DynamoDB.DocumentClient();
-        const { title, description, done } = JSON.parse(event.body)
+        const { title, description } = event.body
         const createdAt = new Date()
-        const id = v4()
+        const id = uuidv4()
         const newtask = { id, title, description, createdAt, done: false }
         await dynamodb.put({
             TableName: 'notificationsTable',
@@ -24,6 +26,4 @@ const addTask = async (event) => {
     }
 }
 
-module.exports = {
-    addTask
-}
+export const handler = middy(addTask).use(jsonBodyParser());
