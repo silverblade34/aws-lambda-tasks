@@ -1,0 +1,70 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: maquiadev1
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: aws-lambda-monitors4
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: aws-lambda-monitors4
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-2
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-east-2:466309146603:table/notificationsTable
+
+functions:
+  addTask:
+    handler: src/addTask.addTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: post
+          cors: true
+  getTask:
+    handler: src/getTask.getTask
+    events:
+      - httpApi:
+          path: /tasks
+          method: get
+          cors: true
+  findTask:
+    handler: src/findTask.findTask
+    events:
+      - httpApi:
+          path: /tasks/{id}
+          method: get
+          cors: true
+  updateTask:
+    handler: src/updateTask.updateTask
+    events:
+      - httpApi:
+          path: /tasks/{id}
+          method: put
+          cors: true
+  deleteTask:
+    handler: src/deleteTask.deleteTask
+    events:
+      - httpApi:
+          path: /tasks/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    notificationsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: notificationsTable
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
